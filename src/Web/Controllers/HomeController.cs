@@ -19,6 +19,15 @@ namespace Web.Controllers
 		public async Task<IActionResult> Index(int? categoryId, int? brandId, int pageId = 1)
 		{
 			var vm = await _homeViewModelService.GetHomeViewModelAsync(categoryId, brandId, pageId);
+
+			//var paginationInfo = new PaginationInfoViewModel
+			//{
+			//	PageId = pageId,
+			//	TotalItems = vm.CatalogItems.Count,
+			//	ItemsOnPage = Constants.ITEMS_PER_PAGE
+			//};
+			//vm.PaginationInfo = paginationInfo;
+
 			return View(vm);
 		}
 

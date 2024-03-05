@@ -1,52 +1,108 @@
 ﻿@model HomeViewModel
 @{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
+    var pi = Model.PaginationInfo;
 }
 
-<div class="card mb-3">
-    <div class="card-body">
-        <form asp-action="Index" method="get" class="row align-items-center">
-            <div class="col-auto">
-                <label>Category</label>
-            </div>
-            <div class="col-auto">
-                <select asp-for="CategoryId" class="form-select" asp-items="Model.Categories">
-                    <option value="">Choose</option>
-                </select>
-            </div>
-            <div class="col-auto">
-                <label>Brand</label>
-            </div>
-            <div class="col-auto">
-                <select asp-for="BrandId" class="form-select" asp-items="Model.Brands">
-                    <option value="">Choose</option>
-                </select>
-            </div>
-            <div class="col-auto">
-                <button class="btn btn-primary">Filter</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div class="row">
-    @foreach (var p in Model.CatalogItems)
-    {
-        <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-            <div class="product-container shadow p-3">
-                <div class="product-image">
-                    <img src="~/img/products/@p.PictureUri" alt="@p.Name" class="w-100" />
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="Index" method="get" class="row align-items-center">
+                <div class="col-auto">
+                    <label>Category</label>
                 </div>
-                <div class="product-name my-2 h6" title="@p.Name">
-                    @p.Name
+                <div class="col-auto">
+                    <select asp-for="CategoryId" class="form-select" asp-items="Model.Categories">
+                        <option value="">Choose</option>
+                    </select>
                 </div>
-                <div class="d-flex justify-content-between align-items-center">
-                    @p.Price.ToString("c2")
-                    <a href="#" class="btn btn-sm btn-success">
-                        <i class="fa-solid fa-cart-plus"></i>
-                    </a>
+                <div class="col-auto">
+                    <label>Brand</label>
                 </div>
-            </div>
+                <div class="col-auto">
+                    <select asp-for="BrandId" class="form-select" asp-items="Model.Brands">
+                        <option value="">Choose</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-primary">Filter</button>
+                </div>
+            </form>
         </div>
-    }
+    </div>
+
+    <div class="row">
+        @foreach (var p in Model.CatalogItems)
+        {
+            <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div class="product-container shadow p-3">
+                    <div class="product-image">
+                        <img src="~/img/products/@p.PictureUri" alt="@p.Name" class="w-100" />
+                    </div>
+                    <div class="product-name my-2 h6" title="@p.Name">
+                        @p.Name
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        @p.Price.ToString("c2")
+                        <a href="#" class="btn btn-sm btn-success">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <p class="text-center mt-2 text-secondary">
+        Showing @pi.RangeStart - @pi.RangeEnd of @pi.TotalItems
+    </p>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            @if (pi.HasPrevious)
+            {
+                <li class="page-item">
+                    <a asp-route-CategoryId="@Model.CategoryId" asp-route-BrandId="@Model.BrandId" asp-route-PageId="@(pi.PageId - 1)" class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true"><span aria-hidden="true">&laquo;</span></a>
+                </li>
+            }
+
+            @foreach (var pageNumber in pi.PageNumbers)
+            {
+                if (pageNumber == -1)
+                {
+                    <li class="page-item disabled">
+                        <a class="page-link" tabindex="-1" aria-disabled="true">&hellip;</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item @(pageNumber == pi.PageId ? "active" : "")">
+                        <a asp-route-CategoryId="@Model.CategoryId" asp-route-BrandId="@Model.BrandId" asp-route-PageId="@pageNumber" class="page-link">@pageNumber</a>
+                    </li>
+                }
+            }
+
+            @if (pi.HasNext)
+            {
+                <li class="page-item">
+                    <a asp-route-CategoryId="@Model.CategoryId" asp-route-BrandId="@Model.BrandId" asp-route-PageId="@(pi.PageId + 1)" class="page-link" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true"><span aria-hidden="true">&raquo;</span></a>
+                </li>
+            }
+        </ul>
+    </nav>
 </div>
