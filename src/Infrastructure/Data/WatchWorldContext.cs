@@ -21,7 +21,11 @@ namespace Infrastructure.Data
 
 		public DbSet<Brand> Brands { get; set; }
 
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		public DbSet<Basket> Baskets { get; set; }
+
+		public DbSet<BasketItem> BasketItems { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.ApplyConfigurationsFromAssembly
 				(Assembly.GetExecutingAssembly());
