@@ -24,8 +24,7 @@ namespace Web.Services
 
             _createdAnonId = Guid.NewGuid().ToString();
 
-            HttpContext.Response.Cookies.Append(Constants.BASKET_COOKIE, _createdAnonId, new
-                CookieOptions
+            HttpContext.Response.Cookies.Append(Constants.BASKET_COOKIE, _createdAnonId, new CookieOptions()
             {
                 Expires = DateTime.Now.AddDays(14),
                 IsEssential = true
@@ -39,7 +38,6 @@ namespace Web.Services
             _basketService = basketServis;
             _httpContextAccessor = httpContextAccessor;
         }
-
 
         public async Task<BasketViewModel> AddItemToBasketAsync(int productId, int quantity)
         {
@@ -56,6 +54,24 @@ namespace Web.Services
 		public async Task EmptyBasketAsync()
 		{
             await _basketService.EmptyBasketAsync(BuyerId);
+		}
+
+		public async Task RemoveItemAsync(int productId)
+		{
+			await _basketService.DeleteBasketItemAsync(BuyerId, productId);
+		}
+
+		public async Task<BasketViewModel> SetQuantitiesAsync(Dictionary<int, int> quantities)
+		{
+            var basket = await _basketService.SetQuantitiesAsync(BuyerId, quantities);
+            return basket.ToBasketViewModel();
+		}
+
+		public async Task TransferBasketAsync()
+		{
+            if(AnonId == null || UserId == null) return;
+            await _basketService.TransferBasketAsync(AnonId, UserId);
+            HttpContext.Response.Cookies.Delete(Constants.BASKET_COOKIE);
 		}
 	}
 }
