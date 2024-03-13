@@ -20,6 +20,6 @@ namespace ApplicationCore.Entities
 
 		public int Quantity { get; set; }
 
-		public Product Product { get; set; } = new();
+		public Product Product { get; set; } = null!;
 	}
 }

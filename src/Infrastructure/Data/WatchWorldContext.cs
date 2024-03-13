@@ -12,7 +12,8 @@ namespace Infrastructure.Data
 	public class WatchWorldContext : DbContext
 	{
 		public WatchWorldContext(DbContextOptions<WatchWorldContext> options) : base(options)
-		{ 
+		{
+			AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 		}
 
 		public DbSet<Product> Products { get; set; }
